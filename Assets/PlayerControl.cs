@@ -62,6 +62,11 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    public float GetCurrentSpeedX()
+    {
+        return currentSpeedX;
+    }
+
     private void SetTargetSpeed(float speed)
     {
         switch (direction)
