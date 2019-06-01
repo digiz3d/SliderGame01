@@ -25,8 +25,8 @@ public class PlayerControl : MonoBehaviour
     private Rigidbody2D rb;
     private Collider2D col2d;
 
-    private float currentSpeed = 0f;
-    private float currentMaxSpeed = 0f;
+    public float currentSpeedX = 0f;
+    public float targetSpeed = 0f;
 
     [SerializeField]
     private float slideFallFactor;
@@ -62,31 +62,29 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-
-    // Update is called once per frame
-    void FixedUpdate()
+    private void SetTargetSpeed(float speed)
     {
         switch (direction)
         {
             case Direction.right:
-
-                if (rb.velocity.x < runningSpeed)
-                {
-                    rb.velocity = new Vector2(runningSpeed, rb.velocity.y);
-                }
+                targetSpeed = speed;
                 break;
 
 
             case Direction.left:
+                targetSpeed = -speed;
 
-                if (rb.velocity.x > -runningSpeed)
-                {
-                    rb.velocity = new Vector2(-runningSpeed, rb.velocity.y);
-                }
                 break;
 
+            default:
+                targetSpeed = 0f;
+                break;
         }
+    }
 
+    // Update is called once per frame
+    void FixedUpdate()
+    {
         isGrounded = Physics2D.IsTouchingLayers(col2d, groundLayer);
 
         // if the user wants to jump while touching the ground
@@ -136,28 +134,34 @@ public class PlayerControl : MonoBehaviour
         #endregion
 
         // if the user wants to slide and can slide
-        if (slide && isOverSlide)
+        if (direction == Direction.none)
+        {
+            targetSpeed = 0f;
+        }
+        else if (slide && isOverSlide)
         {
             if (hit.collider != null)
             {
                 // lets make the guy fall faster
                 rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - Time.deltaTime * slideFallFactor);
-                currentMaxSpeed = slidingSpeed;
+                SetTargetSpeed(slidingSpeed);
+
             }
             else
             {
                 slide = false;
-                currentMaxSpeed = runningSpeed;
+                SetTargetSpeed(runningSpeed);
             }
 
         }
         else
         {
-            currentMaxSpeed = runningSpeed;
+            slide = false;
+            SetTargetSpeed(runningSpeed);
         }
 
-        currentSpeed = Mathf.Lerp(rb.velocity.x, currentMaxSpeed, Time.fixedDeltaTime * 1f);
-        rb.velocity = new Vector2(Mathf.Clamp(currentSpeed, -slidingSpeed, slidingSpeed), rb.velocity.y);
+        currentSpeedX = Mathf.Lerp(currentSpeedX, targetSpeed, Time.fixedDeltaTime * 2f);
+        rb.velocity = new Vector2(Mathf.Clamp(currentSpeedX, -slidingSpeed, slidingSpeed), rb.velocity.y);
         jump = false;
     }
 

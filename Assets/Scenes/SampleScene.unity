@@ -445,8 +445,9 @@ MonoBehaviour:
     m_Bits: 256
   spriteTransform: {fileID: 1253092801}
   isOverSlide: 0
-  currentSpeed: 0
-  currentMaxSpeed: 0
+  currentSpeedX: 0
+  targetSpeed: -5
+  slideFallFactor: 100
 --- !u!61 &1735460501
 BoxCollider2D:
   m_ObjectHideFlags: 0
