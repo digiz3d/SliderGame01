@@ -25,8 +25,8 @@ public class PlayerControl : MonoBehaviour
     private Rigidbody2D rb;
     private Collider2D col2d;
 
-    public float currentSpeed = 0f;
-    public float currentMaxSpeed = 0f;
+    private float currentSpeed = 0f;
+    private float currentMaxSpeed = 0f;
 
     [SerializeField]
     private float slideFallFactor;
@@ -40,46 +40,6 @@ public class PlayerControl : MonoBehaviour
 
     void Update()
     {
-        isGrounded = Physics2D.IsTouchingLayers(col2d, groundLayer);
-
-        #region isOverSlide Detection
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector3.down, 5, groundLayer);
-
-        if (hit.collider != null)
-        {
-            float angle = Vector2.SignedAngle(Vector2.up, hit.normal);
-            float angleAbs = Mathf.Abs(angle);
-            // if the slide is between those numbers...
-            if (15f < angleAbs && angleAbs < 75f)
-            {
-                // and is in the right direction :
-                if (direction == Direction.right && angle < 0f)
-                {
-                    isOverSlide = true;
-                }
-                else if (direction == Direction.left && angle > 0f)
-                {
-                    isOverSlide = true;
-                }
-                else
-                {
-                    isOverSlide = false;
-                }
-            }
-            else
-            {
-                isOverSlide = false;
-            }
-        }
-        else
-        {
-            isOverSlide = false;
-        }
-        if (!isOverSlide)
-        {
-            slide = false;
-        }
-        #endregion
 
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
@@ -127,20 +87,61 @@ public class PlayerControl : MonoBehaviour
 
         }
 
+        isGrounded = Physics2D.IsTouchingLayers(col2d, groundLayer);
+
+        // if the user wants to jump while touching the ground
         if (jump && isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             isGrounded = false;
         }
 
+        #region isOverSlide Detection
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector3.down, 5, groundLayer);
+
+        if (hit.collider != null)
+        {
+            float angle = Vector2.SignedAngle(Vector2.up, hit.normal);
+            float angleAbs = Mathf.Abs(angle);
+            // if the slide is between those numbers...
+            if (15f < angleAbs && angleAbs < 75f)
+            {
+                // and is in the right direction :
+                if (direction == Direction.right && angle < 0f)
+                {
+                    isOverSlide = true;
+                }
+                else if (direction == Direction.left && angle > 0f)
+                {
+                    isOverSlide = true;
+                }
+                else
+                {
+                    isOverSlide = false;
+                }
+            }
+            else
+            {
+                isOverSlide = false;
+            }
+        }
+        else
+        {
+            isOverSlide = false;
+        }
+        if (!isOverSlide)
+        {
+            slide = false;
+        }
+        #endregion
+
+        // if the user wants to slide and can slide
         if (slide && isOverSlide)
         {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector3.down, 5, groundLayer);
             if (hit.collider != null)
             {
-                //rb.AddForce((hit.point - hit.normal) * 50, ForceMode2D.Force);
+                // lets make the guy fall faster
                 rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - Time.deltaTime * slideFallFactor);
-                Debug.Log("on ajoute une force");
                 currentMaxSpeed = slidingSpeed;
             }
             else
@@ -148,7 +149,7 @@ public class PlayerControl : MonoBehaviour
                 slide = false;
                 currentMaxSpeed = runningSpeed;
             }
-            
+
         }
         else
         {
