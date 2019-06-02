@@ -43,12 +43,12 @@ public class PlayerControl : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            Right();
+            GoRight();
         }
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            Left();
+            GoLeft();
         }
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -60,6 +60,94 @@ public class PlayerControl : MonoBehaviour
         {
             Slide();
         }
+
+        /* ###############
+         * ###############
+         * ###############
+         * ###############
+         * ###############
+         * ###############
+         * ###############
+         * ###############
+         */
+        isGrounded = Physics2D.IsTouchingLayers(col2d, groundLayer);
+
+        // if the user wants to jump while touching the ground
+        if (jump && isGrounded)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            isGrounded = false;
+        }
+
+        #region isOverSlide Detection
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector3.down, 5, groundLayer);
+
+        if (hit.collider != null)
+        {
+            float angle = Vector2.SignedAngle(Vector2.up, hit.normal);
+            float angleAbs = Mathf.Abs(angle);
+            // if the slide is between those numbers...
+            if (15f < angleAbs && angleAbs < 75f)
+            {
+                // and is in the right direction :
+                if (direction == Direction.right && angle < 0f)
+                {
+                    isOverSlide = true;
+                }
+                else if (direction == Direction.left && angle > 0f)
+                {
+                    isOverSlide = true;
+                }
+                else
+                {
+                    isOverSlide = false;
+                }
+            }
+            else
+            {
+                isOverSlide = false;
+            }
+        }
+        else
+        {
+            isOverSlide = false;
+        }
+        if (!isOverSlide)
+        {
+            slide = false;
+        }
+        #endregion
+
+        // if the user wants to slide and can slide
+        if (direction == Direction.none)
+        {
+            targetSpeed = 0f;
+        }
+        else if (slide && isOverSlide)
+        {
+            if (hit.collider != null)
+            {
+                // lets make the guy fall faster
+                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - Time.deltaTime * slideFallFactor);
+                SetTargetSpeed(slidingSpeed);
+
+            }
+            else
+            {
+                slide = false;
+                SetTargetSpeed(runningSpeed);
+            }
+
+        }
+        else
+        {
+            slide = false;
+            SetTargetSpeed(runningSpeed);
+        }
+
+        currentSpeedX = Mathf.Lerp(currentSpeedX, targetSpeed, Time.deltaTime * 2f);
+        rb.velocity = new Vector2(Mathf.Clamp(currentSpeedX, -slidingSpeed, slidingSpeed), rb.velocity.y);
+        jump = false;
     }
 
     public float GetCurrentSpeedX()
@@ -87,6 +175,7 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    /*
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -169,19 +258,20 @@ public class PlayerControl : MonoBehaviour
         rb.velocity = new Vector2(Mathf.Clamp(currentSpeedX, -slidingSpeed, slidingSpeed), rb.velocity.y);
         jump = false;
     }
+    */
 
     public Direction GetDirection()
     {
         return direction;
     }
 
-    public void Right()
+    public void GoRight()
     {
         direction = Direction.right;
         spriteTransform.localRotation = Quaternion.Euler(spriteTransform.localRotation.eulerAngles.x, 0, spriteTransform.localRotation.eulerAngles.z);
     }
 
-    public void Left()
+    public void GoLeft()
     {
         direction = Direction.left;
         spriteTransform.localRotation = Quaternion.Euler(spriteTransform.localRotation.eulerAngles.x, 180, spriteTransform.localRotation.eulerAngles.z);
@@ -198,6 +288,7 @@ public class PlayerControl : MonoBehaviour
         slide = true;
     }
 
+    /*
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
@@ -217,6 +308,7 @@ public class PlayerControl : MonoBehaviour
             //Debug.Log("2-angle = " + Vector2.SignedAngle(Vector2.up, hit.normal));
         }
     }
+    */
 }
 
 public enum Direction
