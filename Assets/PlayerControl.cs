@@ -183,13 +183,13 @@ public class PlayerControl : MonoBehaviour
     public void GoRight()
     {
         direction = Direction.right;
-        spriteTransform.localRotation = Quaternion.Euler(spriteTransform.localRotation.eulerAngles.x, 0, spriteTransform.localRotation.eulerAngles.z);
+        spriteTransform.localRotation = Quaternion.Euler(spriteTransform.localRotation.eulerAngles.x, 0f, spriteTransform.localRotation.eulerAngles.z);
     }
 
     public void GoLeft()
     {
         direction = Direction.left;
-        spriteTransform.localRotation = Quaternion.Euler(spriteTransform.localRotation.eulerAngles.x, 180, spriteTransform.localRotation.eulerAngles.z);
+        spriteTransform.localRotation = Quaternion.Euler(spriteTransform.localRotation.eulerAngles.x, 180f, spriteTransform.localRotation.eulerAngles.z);
     }
 
     public void Jump()

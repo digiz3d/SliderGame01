@@ -11,6 +11,7 @@ public class TrajectoryAngle : MonoBehaviour
 
     private Rigidbody2D rb;
     private Collider2D col2d;
+    private PlayerControl control;
 
     private float currentAngle = 0f;
     private float targetAngle = 0f;
@@ -20,6 +21,7 @@ public class TrajectoryAngle : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         col2d = GetComponent<Collider2D>();
+        control = GetComponent<PlayerControl>();
     }
 
     private void Update()
@@ -82,6 +84,7 @@ public class TrajectoryAngle : MonoBehaviour
 
     private void SetSpriteAngle(float angle)
     {
-        spriteTransform.localRotation = Quaternion.Euler(spriteTransform.localRotation.x, spriteTransform.localRotation.y, angle);
+        float finalAngle = control.GetDirection() == Direction.left ? -angle : angle;
+        spriteTransform.localRotation = Quaternion.Euler(spriteTransform.localRotation.eulerAngles.x, spriteTransform.localRotation.eulerAngles.y, finalAngle);
     }
 }
