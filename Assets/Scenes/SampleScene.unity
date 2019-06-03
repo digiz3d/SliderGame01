@@ -752,6 +752,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
+  spriteTransform: {fileID: 1253092801}
 --- !u!4 &1735460504
 Transform:
   m_ObjectHideFlags: 0

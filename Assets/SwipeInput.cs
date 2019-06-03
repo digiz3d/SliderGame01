@@ -10,7 +10,7 @@ public class SwipeInput : MonoBehaviour
 
     private Vector2 startPosition;
     private Vector2 direction;
-    /// <summary> Temps d'attente pour les doubles sauts </summary>
+
     float MaxTimeWait = 1;
     float VariancePosition = 1;
 
@@ -27,7 +27,7 @@ public class SwipeInput : MonoBehaviour
     {
         if (Input.touchCount == 1)
         {
-            //On récupère le mouvement
+            // touch start
             Touch t = Input.GetTouch(0);
 
             switch (t.phase)
