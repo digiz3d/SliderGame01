@@ -212,7 +212,7 @@ MonoBehaviour:
   aheadCameraDistance: 12
   verticalOffset: 4
   smoothTimeX: 0.2
-  smoothTimeY: 0.1
+  smoothTimeY: 0.05
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
