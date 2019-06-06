@@ -8,8 +8,12 @@ public class CameraFollowsPlayer : MonoBehaviour
     private PlayerControl control;
     [SerializeField]
     private float aheadCameraDistance = 15f;
+    [SerializeField]
+    private float verticalOffset = 0f;
 
+    [SerializeField]
     private float smoothTimeX = 0.2f;
+    [SerializeField]
     private float smoothTimeY = 0.1f;
 
     private float xVelocity = 0.0f;
@@ -38,7 +42,7 @@ public class CameraFollowsPlayer : MonoBehaviour
         }
 
         float posX = Mathf.SmoothDamp(transform.position.x, target.x, ref xVelocity, smoothTimeX);
-        float posY = Mathf.SmoothDamp(transform.position.y, target.y, ref yVelocity, smoothTimeY);
+        float posY = Mathf.SmoothDamp(transform.position.y, target.y + verticalOffset, ref yVelocity, smoothTimeY);
 
         transform.position = new Vector3(posX, posY, transform.position.z);
     }

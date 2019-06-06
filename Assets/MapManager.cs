@@ -12,23 +12,60 @@ public class MapManager : MonoBehaviour
     [SerializeField]
     private GameObject[] blocksToSpawn = null;
 
+    private Dictionary<GameObject, Vector3> endPoints = null;
     private List<GameObject> spawnedBlocks = null;
     private List<GameObject> blocksToDelete = null;
+    private Dictionary<GameObject, GameObject> originalPrefabs = null;
     private float longuestBlockSize = 0f;
 
     private void Start()
     {
         spawnedBlocks = new List<GameObject>();
         blocksToDelete = new List<GameObject>();
+        endPoints = new Dictionary<GameObject, Vector3>();
+        originalPrefabs = new Dictionary<GameObject, GameObject>();
 
         foreach (GameObject g in blocksToSpawn)
         {
             Spline s = g.GetComponent<SpriteShapeController>().spline;
             int count = s.GetPointCount();
-            longuestBlockSize = Mathf.Max(longuestBlockSize, s.GetPosition(count - 1).x);
+
+            endPoints.Add(g, GetLastPoint(g));
+
+            longuestBlockSize = Mathf.Max(longuestBlockSize, endPoints[g].x);
         }
 
         NewMap();
+    }
+
+    private Vector3 GetLastPoint(GameObject g)
+    {
+        SpriteShapeController spriteShapeController = g.GetComponent<SpriteShapeController>();
+
+        Vector3 point = Vector3.zero;
+
+        Spline s = spriteShapeController.spline;
+        int count = s.GetPointCount();
+
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 temp = s.GetPosition(i);
+            if (temp.y <= -150f) continue;
+
+            if (temp.x > point.x) point = temp;
+        }
+
+        return point;
+    }
+
+    private Vector3 GetLastPosition(GameObject block)
+    {
+        GameObject prefab = originalPrefabs[block];
+        if (endPoints[prefab] == null)
+        {
+            return Vector3.zero;
+        }
+        return block.transform.localPosition + endPoints[prefab];
     }
 
     private void Update()
@@ -52,15 +89,7 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    private Vector3 GetLastPosition(GameObject block)
-    {
-        SpriteShapeController spriteShapeController = block.GetComponent<SpriteShapeController>();
-        if (!spriteShapeController) return Vector3.zero;
 
-        Spline s = spriteShapeController.spline;
-        int count = s.GetPointCount();
-        return block.transform.localPosition + s.GetPosition(count - 1);
-    }
 
     private void DeleteBlock(GameObject g)
     {
@@ -82,6 +111,7 @@ public class MapManager : MonoBehaviour
 
         // spawn a new black at the end of the map
         GameObject spawnedBlock = Instantiate(blockToSpawn, endPosition, transform.localRotation, transform);
+        originalPrefabs.Add(spawnedBlock, blockToSpawn);
         spawnedBlocks.Add(spawnedBlock);
     }
 
@@ -98,7 +128,9 @@ public class MapManager : MonoBehaviour
         }
 
         // spawn the very first block
-        spawnedBlocks.Add(Instantiate(blocksToSpawn[0], new Vector3(-(longuestBlockSize * blocksBehind), 0f), Quaternion.identity, transform));
+        GameObject spawnedBlock = Instantiate(blocksToSpawn[0], new Vector3(-(longuestBlockSize * blocksBehind), 0f), Quaternion.identity, transform);
+        originalPrefabs.Add(spawnedBlock, blocksToSpawn[0]);
+        spawnedBlocks.Add(spawnedBlock);
 
         // then, spawn the other blocks
         while (1 + blocksAhead + blocksBehind > spawnedBlocks.Count)

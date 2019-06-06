@@ -72,12 +72,12 @@ SpriteShapeRenderer:
   m_SortingOrder: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_MaskInteraction: 0
-  m_ShapeTexture: {fileID: 0}
+  m_ShapeTexture: {fileID: 2800000, guid: 1741275d53dafcd4ea2db158089076c9, type: 3}
   m_Sprites:
   - {fileID: 21300000, guid: 1741275d53dafcd4ea2db158089076c9, type: 3}
   m_LocalAABB:
-    m_Center: {x: 22.5, y: 0, z: -0.005}
-    m_Extent: {x: 22.5, y: 0.5, z: 0.005}
+    m_Center: {x: 21.579721, y: -100.000015, z: -0.005015}
+    m_Extent: {x: 25.359652, y: 100.500015, z: 0.005015}
 --- !u!114 &3627880871694647762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,8 +91,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Spline:
-    m_IsOpenEnded: 1
+    m_IsOpenEnded: 0
     m_ControlPoints:
+    - position: {x: -3.2799969, y: -200, z: 0}
+      leftTangent: {x: 0, y: 0, z: 0}
+      rightTangent: {x: 0, y: 0, z: 0}
+      mode: 0
+      height: 1
+      bevelCutoff: 0
+      bevelSize: 0
+      spriteIndex: 0
+      corner: 1
     - position: {x: 0, y: 0, z: 0}
       leftTangent: {x: -14.153156, y: -0.010335922, z: 0}
       rightTangent: {x: 9.185032, y: 0.006708145, z: 0}
@@ -102,7 +111,16 @@ MonoBehaviour:
       bevelSize: 0
       spriteIndex: 0
       corner: 1
-    - position: {x: 45, y: 0, z: 0}
+    - position: {x: 44.35446, y: 0, z: 0}
+      leftTangent: {x: 0, y: 0, z: 0}
+      rightTangent: {x: 0, y: 0, z: 0}
+      mode: 0
+      height: 1
+      bevelCutoff: 0
+      bevelSize: 0
+      spriteIndex: 0
+      corner: 1
+    - position: {x: 46.439396, y: -200, z: 0}
       leftTangent: {x: -6.139103, y: 0.062942505, z: 0}
       rightTangent: {x: 14.724007, y: -0.1509552, z: 0}
       mode: 0
@@ -139,6 +157,13 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: 0, y: 0.45}
-  - {x: 44.426666, y: 0.45}
-  - {x: 45, y: 0.45}
+  - {x: -3.7299361, y: -199.99261}
+  - {x: -0.4499401, y: 0.007340475}
+  - {x: 0, y: 0.44999996}
+  - {x: 44.35446, y: 0.45}
+  - {x: 44.80444, y: 0.00469125}
+  - {x: 46.889378, y: -199.9953}
+  - {x: 46.43942, y: -200.45001}
+  - {x: -2.646531, y: -200.45001}
+  - {x: -3.280005, y: -200.45001}
+  - {x: -3.7299361, y: -199.99261}
