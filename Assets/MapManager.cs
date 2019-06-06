@@ -15,7 +15,7 @@ public class MapManager : MonoBehaviour
     private Dictionary<GameObject, Vector3> endPoints = null;
     private List<GameObject> spawnedBlocks = null;
     private List<GameObject> blocksToDelete = null;
-    private Dictionary<GameObject, GameObject> originalPrefabs = null;
+    public Dictionary<GameObject, GameObject> originalPrefabs = null;
     private float longuestBlockSize = 0f;
 
     private void Start()
@@ -93,6 +93,7 @@ public class MapManager : MonoBehaviour
 
     private void DeleteBlock(GameObject g)
     {
+        originalPrefabs.Remove(g);
         spawnedBlocks.Remove(g);
         Destroy(g);
     }
@@ -124,8 +125,10 @@ public class MapManager : MonoBehaviour
             {
                 DeleteBlock(spawnedBlocks[x]);
             }
-            spawnedBlocks.Clear();
         }
+
+        spawnedBlocks.Clear();
+        originalPrefabs.Clear();
 
         // spawn the very first block
         GameObject spawnedBlock = Instantiate(blocksToSpawn[0], new Vector3(-(longuestBlockSize * blocksBehind), 0f), Quaternion.identity, transform);
